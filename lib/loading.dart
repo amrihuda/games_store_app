@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:games_store_app/home.dart';
-import 'package:games_store_app/login.dart';
+import 'package:games_store_app/main_page.dart';
+import 'package:games_store_app/pages/auth/login.dart';
 import 'package:localstorage/localstorage.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -29,7 +29,7 @@ class _LoadingPageState extends State<LoadingPage> {
                 {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) {
-                    return const HomePage();
+                    return const MainPage();
                   }))
                 }
             });
@@ -38,37 +38,31 @@ class _LoadingPageState extends State<LoadingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
       body: InkWell(
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            /// Paint the area where the inner widgets are loaded with the
-            /// background to keep consistency with the screen background
             Container(
               decoration: const BoxDecoration(color: Colors.white),
             ),
-
-            /// Render the background image
-            // Container(
-            //   child: Image.asset(‘assets/somebackground.png’, fit: BoxFit.cover),
-            // ),
-            /// Render the Title widget, loader and messages below each other
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Expanded(
                   flex: 3,
-                  child: Container(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: const <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 30.0),
-                      ),
-                      // ‘Application Title’,
-                    ],
-                  )),
+                  child: SizedBox(
+                    width: 100,
+                    height: 150,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Padding(
+                          padding: EdgeInsets.only(top: 30.0),
+                        ),
+                        Image.asset('asset/images/game-controller.png'),
+                      ],
+                    ),
+                  ),
                 ),
                 Expanded(
                   flex: 1,
@@ -82,7 +76,6 @@ class _LoadingPageState extends State<LoadingPage> {
                       Padding(
                         padding: EdgeInsets.only(top: 20.0),
                       ),
-                      Text('Loading...'),
                     ],
                   ),
                 ),

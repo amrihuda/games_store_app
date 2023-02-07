@@ -7,12 +7,15 @@ class GenrePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Genre Page")),
-      body: Center(
-        child: ElevatedButton(
-          child: const Text("Back"),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: ElevatedButton(
+            child: const Text("Back"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
       ),
     );

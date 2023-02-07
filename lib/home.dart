@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:games_store_app/login.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:games_store_app/genre.dart';
+import 'helpers/xml_http.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,104 +10,140 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  final LocalStorage storage = LocalStorage('games_store_app');
+  var genres = [];
+  var games = [];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
+  @override
+  void initState() {
+    super.initState();
+
+    getGenres().then((result) {
+      setState(() {
+        genres = result;
+      });
+    });
+    getGames().then((result) {
+      setState(() {
+        games = result;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final LocalStorage storage = LocalStorage('games_store_app');
-    List<Widget> widgetOptions = <Widget>[
-      Column(
-        children: [
-          ElevatedButton(
-            child: const Text("Go to Genre Page"),
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const GenrePage();
-              }));
-            },
-          ),
-          Text(storage.getItem('user') ?? ''),
-          storage.getItem('user') == null
-              ? ElevatedButton(
-                  child: const Text("Log in"),
-                  onPressed: () {
-                    storage.clear();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return const LoginPage();
-                        },
-                      ),
-                    );
-                  },
-                )
-              : ElevatedButton(
-                  child: const Text("Log out"),
-                  onPressed: () {
-                    storage.clear();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return const LoginPage();
-                        },
-                      ),
-                    );
-                  },
-                ),
-        ],
-      ),
-      const Text(
-        'Index 1: Games',
-        style: optionStyle,
-      ),
-      const Text(
-        'Index 2: Cart',
-        style: optionStyle,
-      ),
-      const Text(
-        'Index 3: Profile',
-        style: optionStyle,
-      ),
-    ];
-
     return Scaffold(
       appBar: AppBar(title: const Text("Games Store")),
-      body: Center(
-        child: widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.sports_esports),
-            label: 'Games',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        onTap: _onItemTapped,
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: ListView(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("BROWSE BY GENRE"),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'genres');
+                    },
+                    child: const Text("More"))
+              ],
+            ),
+            SizedBox(
+              height: 100,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: genres.length,
+                itemBuilder: (context, i) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: SizedBox(
+                      width: 200,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text(
+                          genres[i]['name'],
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text("ALL GAMES"),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'games');
+                    },
+                    child: const Text("More"))
+              ],
+            ),
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const ScrollPhysics(),
+              itemCount: games.length,
+              itemBuilder: (ctx, i) {
+                return ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size.zero,
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Image.network(
+                          "http://localhost:3000/uploads/${games[i]['image']}",
+                          fit: BoxFit.cover,
+                          errorBuilder: (BuildContext context, Object exception,
+                              StackTrace? stackTrace) {
+                            return Image.asset('asset/images/game-default.jpg');
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              games[i]['name'],
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  games[i]['price'].toString(),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+                crossAxisCount: 2,
+                mainAxisExtent: 200,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
