@@ -11,7 +11,7 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Genre Page")),
+      appBar: AppBar(title: const Text("Game Page")),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(

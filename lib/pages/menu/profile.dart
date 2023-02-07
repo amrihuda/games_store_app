@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:games_store_app/pages/auth/login.dart';
@@ -20,14 +22,14 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: [
-            Text(storage.getItem('user') ?? ''),
+            Text(jsonDecode(storage.getItem('user'))['user_token'] ?? ''),
             storage.getItem('user') == null
                 ? ElevatedButton(
                     child: const Text("Log in"),
                     onPressed: () {
                       storage.clear();
-                      Navigator.pushReplacement(
-                        context,
+                      Navigator.of(context, rootNavigator: true)
+                          .pushReplacement(
                         MaterialPageRoute(
                           builder: (context) {
                             return const LoginPage();
@@ -40,8 +42,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: const Text("Log out"),
                     onPressed: () {
                       storage.clear();
-                      Navigator.pushReplacement(
-                        context,
+                      Navigator.of(context, rootNavigator: true)
+                          .pushReplacement(
                         MaterialPageRoute(
                           builder: (context) {
                             return const LoginPage();

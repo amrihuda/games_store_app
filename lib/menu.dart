@@ -3,7 +3,9 @@ import 'package:games_store_app/pages/auth/login.dart';
 import 'package:localstorage/localstorage.dart';
 
 class MenuPage extends StatefulWidget {
-  const MenuPage({super.key});
+  const MenuPage({Key? key, required this.profile}) : super(key: key);
+
+  final Map profile;
 
   @override
   State<MenuPage> createState() => _MenuPageState();
@@ -16,17 +18,47 @@ class _MenuPageState extends State<MenuPage> {
     return Scaffold(
       appBar: AppBar(title: const Text("Menu")),
       body: Padding(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: ListView(
           children: [
-            const Text("Profile picture"),
+            SizedBox(
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Image.network(
+                      "http://localhost:3000/uploads/${widget.profile['image'] ?? ''}",
+                      width: 60,
+                      height: 60,
+                      errorBuilder: (context, xception, stackTrace) {
+                        return Image.asset(
+                          'assets/images/game-controller.png',
+                          width: 60,
+                          height: 60,
+                        );
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.profile['username'] ?? ''),
+                        Text(widget.profile['email'] ?? ''),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
             const Divider(),
             SizedBox(
               height: 50,
               child: TextButton(
                 style: TextButton.styleFrom(foregroundColor: Colors.black),
                 onPressed: () {
-                  Navigator.pushNamed(context, "profile");
+                  Navigator.pushNamed(context, "/profile");
                 },
                 child: Row(
                   children: [
@@ -57,7 +89,7 @@ class _MenuPageState extends State<MenuPage> {
               child: TextButton(
                 style: TextButton.styleFrom(foregroundColor: Colors.black),
                 onPressed: () {
-                  Navigator.pushNamed(context, "library");
+                  Navigator.pushNamed(context, "/library");
                 },
                 child: Row(
                   children: [
@@ -90,8 +122,7 @@ class _MenuPageState extends State<MenuPage> {
                 style: TextButton.styleFrom(foregroundColor: Colors.red),
                 onPressed: () {
                   storage.clear();
-                  Navigator.pushReplacement(
-                    context,
+                  Navigator.of(context, rootNavigator: true).pushReplacement(
                     MaterialPageRoute(
                       builder: (context) {
                         return const LoginPage();

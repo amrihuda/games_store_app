@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(title: const Text("Games Store")),
       body: Padding(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
         child: ListView(
           children: [
             Row(
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
                 const Text("BROWSE BY GENRE"),
                 TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, 'genres');
+                      Navigator.pushNamed(context, '/genres');
                     },
                     child: const Text("More"))
               ],
@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                 const Text("ALL GAMES"),
                 TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, 'games');
+                      Navigator.pushNamed(context, '/games');
                     },
                     child: const Text("More"))
               ],
@@ -97,11 +97,14 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Expanded(
                         child: Image.network(
-                          "http://localhost:3000/uploads/${games[i]['image']}",
+                          "http://localhost:3000/uploads/${games[i]['image'] ?? ''}",
                           fit: BoxFit.cover,
                           errorBuilder: (BuildContext context, Object exception,
                               StackTrace? stackTrace) {
-                            return Image.asset('asset/images/game-default.jpg');
+                            return Image.asset(
+                              'assets/images/game-default.jpg',
+                              fit: BoxFit.cover,
+                            );
                           },
                         ),
                       ),

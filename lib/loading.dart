@@ -59,7 +59,7 @@ class _LoadingPageState extends State<LoadingPage> {
                         const Padding(
                           padding: EdgeInsets.only(top: 30.0),
                         ),
-                        Image.asset('asset/images/game-controller.png'),
+                        Image.asset('assets/images/game-controller.png'),
                       ],
                     ),
                   ),

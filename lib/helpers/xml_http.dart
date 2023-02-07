@@ -1,5 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:localstorage/localstorage.dart';
+
+final LocalStorage storage = LocalStorage('games_store_app');
 
 userRegister(form) {
   return http.post(Uri.parse('http://localhost:3000/api/users'),
@@ -17,13 +20,27 @@ userLogin(form) {
       body: jsonEncode(form));
 }
 
+getProfile() async {
+  final response = await http.get(
+    Uri.parse('http://localhost:3000/api/users/user'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'user_token': jsonDecode(storage.getItem('user'))['user_token'],
+    },
+  );
+  return jsonDecode(response.body);
+}
+
 getGenres() async {
-  final response =
-      await http.get(Uri.parse('http://localhost:3000/api/genres'));
+  final response = await http.get(
+    Uri.parse('http://localhost:3000/api/genres'),
+  );
   return jsonDecode(response.body);
 }
 
 getGames() async {
-  final response = await http.get(Uri.parse('http://localhost:3000/api/games'));
+  final response = await http.get(
+    Uri.parse('http://localhost:3000/api/games'),
+  );
   return jsonDecode(response.body);
 }

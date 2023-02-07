@@ -40,7 +40,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: SizedBox(
                         width: 100,
                         height: 100,
-                        child: Image.asset('asset/images/game-controller.png')),
+                        child:
+                            Image.asset('assets/images/game-controller.png')),
                   ),
                 ),
                 const Padding(
