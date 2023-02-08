@@ -22,37 +22,40 @@ class _MenuPageState extends State<MenuPage> {
         child: ListView(
           children: [
             SizedBox(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Image.network(
-                      "http://localhost:3000/uploads/${widget.profile['image'] ?? ''}",
-                      width: 60,
-                      height: 60,
-                      errorBuilder: (context, xception, stackTrace) {
-                        return Image.asset(
-                          'assets/images/game-controller.png',
-                          width: 60,
-                          height: 60,
-                        );
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              height: 60,
+              child: widget.profile.isNotEmpty
+                  ? Row(
                       children: [
-                        Text(widget.profile['username'] ?? ''),
-                        Text(widget.profile['email'] ?? ''),
+                        Expanded(
+                          flex: 3,
+                          child: Image.network(
+                            "http://localhost:3000/uploads/${widget.profile['image']}",
+                            errorBuilder: (context, xception, stackTrace) {
+                              return Image.asset(
+                                'assets/images/game-controller.png',
+                              );
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          flex: 9,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(widget.profile['username']),
+                              Text(widget.profile['email']),
+                            ],
+                          ),
+                        )
                       ],
-                    ),
-                  )
-                ],
-              ),
+                    )
+                  : Container(),
             ),
-            const Divider(),
+            const Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Divider(),
+            ),
             SizedBox(
               height: 50,
               child: TextButton(
@@ -63,11 +66,11 @@ class _MenuPageState extends State<MenuPage> {
                 child: Row(
                   children: [
                     const Expanded(
-                      flex: 1,
+                      flex: 2,
                       child: Center(child: Icon(Icons.person)),
                     ),
                     Expanded(
-                      flex: 4,
+                      flex: 9,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -94,11 +97,11 @@ class _MenuPageState extends State<MenuPage> {
                 child: Row(
                   children: [
                     const Expanded(
-                      flex: 1,
+                      flex: 2,
                       child: Center(child: Icon(Icons.sports_esports)),
                     ),
                     Expanded(
-                      flex: 4,
+                      flex: 9,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -133,11 +136,11 @@ class _MenuPageState extends State<MenuPage> {
                 child: Row(
                   children: [
                     const Expanded(
-                      flex: 1,
+                      flex: 2,
                       child: Center(child: Icon(Icons.logout)),
                     ),
                     Expanded(
-                      flex: 5,
+                      flex: 10,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,

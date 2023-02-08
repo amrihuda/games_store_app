@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:games_store_app/helpers/xml_http.dart';
 import 'package:games_store_app/menu.dart';
-import 'package:games_store_app/pages/home/game.dart';
+import 'package:games_store_app/pages/home/game_genre.dart';
 import 'package:games_store_app/pages/home/genre.dart';
 import 'package:games_store_app/home.dart';
 import 'package:games_store_app/pages/menu/profile.dart';
+import 'package:games_store_app/search.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -42,6 +43,25 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  var genres = [];
+  var games = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    getGenres().then((result) {
+      setState(() {
+        genres = result;
+      });
+    });
+    getGames().then((result) {
+      setState(() {
+        games = result;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -51,17 +71,14 @@ class _MainPageState extends State<MainPage> {
           top: false,
           child: IndexedStack(
             index: _selectedIndex,
-            children: const <Widget>[
-              HomeNavigator(),
-              Text(
-                'Index 1: Search',
-                style: optionStyle,
-              ),
-              Text(
+            children: <Widget>[
+              HomeNavigator(genres: genres, games: games),
+              SearchNavigator(games: games),
+              const Text(
                 'Index 2: Cart',
                 style: optionStyle,
               ),
-              MenuNavigator(),
+              const MenuNavigator(),
             ],
           ),
         ),
@@ -97,7 +114,14 @@ class _MainPageState extends State<MainPage> {
 }
 
 class HomeNavigator extends StatefulWidget {
-  const HomeNavigator({super.key});
+  const HomeNavigator({
+    Key? key,
+    required this.genres,
+    required this.games,
+  }) : super(key: key);
+
+  final List genres;
+  final List games;
 
   @override
   State<HomeNavigator> createState() => _HomeNavigatorState();
@@ -116,13 +140,64 @@ class _HomeNavigatorState extends State<HomeNavigator> {
           builder: (context) {
             switch (settings.name) {
               case '/':
-                return const HomePage();
+                return HomePage(
+                  genres: widget.genres,
+                  games: widget.games,
+                );
               case '/genres':
-                return const GenrePage();
+                return GenrePage(
+                  genres: widget.genres,
+                );
               case '/games':
-                return const GamePage();
+                return GameGenrePage(
+                  games: widget.games,
+                );
               default:
-                return const HomePage();
+                return HomePage(
+                  genres: widget.genres,
+                  games: widget.games,
+                );
+            }
+          },
+        );
+      },
+    );
+  }
+}
+
+class SearchNavigator extends StatefulWidget {
+  const SearchNavigator({Key? key, required this.games}) : super(key: key);
+
+  final List games;
+
+  @override
+  State<SearchNavigator> createState() => _SearchNavigatorState();
+}
+
+GlobalKey<NavigatorState> _searchNavigatorKey = GlobalKey<NavigatorState>();
+
+class _SearchNavigatorState extends State<SearchNavigator> {
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      key: _searchNavigatorKey,
+      onGenerateRoute: (settings) {
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) {
+            switch (settings.name) {
+              case '/':
+                return SearchPage(
+                  games: widget.games,
+                );
+              // case '/details':
+              //   return ProfilePage(
+              //     profile: profile,
+              //   );
+              default:
+                return SearchPage(
+                  games: widget.games,
+                );
             }
           },
         );
