@@ -148,10 +148,6 @@ class _HomeNavigatorState extends State<HomeNavigator> {
                 return GenrePage(
                   genres: widget.genres,
                 );
-              case '/games':
-                return GameGenrePage(
-                  games: widget.games,
-                );
               default:
                 return HomePage(
                   genres: widget.genres,

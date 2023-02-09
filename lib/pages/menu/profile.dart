@@ -199,7 +199,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       },
                       child: const Text(
                         'Update',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),

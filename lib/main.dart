@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
             color: Colors.black,
           ),
           titleTextStyle: TextStyle(
+            fontFamily: 'Poppins',
             color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,

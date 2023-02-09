@@ -13,6 +13,8 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   final LocalStorage storage = LocalStorage('games_store_app');
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +77,10 @@ class _MenuPageState extends State<MenuPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Text("Profile"),
+                          Text(
+                            "Profile",
+                            style: optionStyle,
+                          ),
                         ],
                       ),
                     ),
@@ -106,7 +111,10 @@ class _MenuPageState extends State<MenuPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Text("Library"),
+                          Text(
+                            "Library",
+                            style: optionStyle,
+                          ),
                         ],
                       ),
                     ),
@@ -145,7 +153,10 @@ class _MenuPageState extends State<MenuPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
-                          Text("Logout"),
+                          Text(
+                            "Logout",
+                            style: optionStyle,
+                          ),
                         ],
                       ),
                     ),

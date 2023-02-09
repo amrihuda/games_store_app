@@ -13,7 +13,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   List games = [];
 
-  TextEditingController seacrhController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
 
   void searchGames(String key) {
     setState(() {
@@ -38,30 +38,30 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: SizedBox(
-              child: TextField(
-                controller: seacrhController,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white70,
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        searchGames('');
-                        seacrhController.text = '';
-                      },
-                    ),
-                    hintText: 'Search for games'),
-                onChanged: (value) {
-                  searchGames(value);
-                },
-              ),
+          child: SizedBox(
+            child: TextField(
+              controller: searchController,
+              maxLines: 1,
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                  filled: true,
+                  fillColor: Colors.white70,
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      searchGames('');
+                      searchController.text = '';
+                    },
+                  ),
+                  hintText: 'Search for games'),
+              onChanged: (value) {
+                searchGames(value);
+              },
             ),
           ),
         ),
