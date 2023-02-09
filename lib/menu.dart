@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:games_store_app/pages/auth/login.dart';
+import 'package:games_store_app/pages/menu/profile.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:games_store_app/helpers/xml_http.dart';
 
 class MenuPage extends StatefulWidget {
-  const MenuPage({Key? key, required this.profile}) : super(key: key);
-
-  final Map profile;
+  const MenuPage({super.key});
 
   @override
   State<MenuPage> createState() => _MenuPageState();
@@ -15,6 +15,20 @@ class _MenuPageState extends State<MenuPage> {
   final LocalStorage storage = LocalStorage('games_store_app');
   static const TextStyle optionStyle =
       TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
+
+  var profile = {};
+
+  @override
+  void initState() {
+    super.initState();
+
+    getProfile().then((result) {
+      setState(() {
+        profile = result;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,13 +39,13 @@ class _MenuPageState extends State<MenuPage> {
           children: [
             SizedBox(
               height: 60,
-              child: widget.profile.isNotEmpty
+              child: profile.isNotEmpty
                   ? Row(
                       children: [
                         Expanded(
                           flex: 3,
                           child: Image.network(
-                            "http://localhost:3000/uploads/${widget.profile['image']}",
+                            "http://localhost:3000/uploads/${profile['image']}",
                             errorBuilder: (context, xception, stackTrace) {
                               return Image.asset(
                                 'assets/images/game-controller.png',
@@ -45,8 +59,8 @@ class _MenuPageState extends State<MenuPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(widget.profile['username']),
-                              Text(widget.profile['email']),
+                              Text(profile['username']),
+                              Text(profile['email']),
                             ],
                           ),
                         )
@@ -63,7 +77,11 @@ class _MenuPageState extends State<MenuPage> {
               child: TextButton(
                 style: TextButton.styleFrom(foregroundColor: Colors.black),
                 onPressed: () {
-                  Navigator.pushNamed(context, "/profile");
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProfilePage(),
+                      ));
                 },
                 child: Row(
                   children: [
@@ -97,7 +115,7 @@ class _MenuPageState extends State<MenuPage> {
               child: TextButton(
                 style: TextButton.styleFrom(foregroundColor: Colors.black),
                 onPressed: () {
-                  Navigator.pushNamed(context, "/library");
+                  // To Library
                 },
                 child: Row(
                   children: [

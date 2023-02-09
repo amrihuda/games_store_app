@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:games_store_app/pages/home/game_genre.dart';
+import 'package:games_store_app/helpers/xml_http.dart';
 
 class GenrePage extends StatefulWidget {
-  const GenrePage({Key? key, required this.genres}) : super(key: key);
-
-  final List genres;
+  const GenrePage({super.key});
 
   @override
   State<GenrePage> createState() => _GenrePageState();
@@ -13,14 +12,14 @@ class GenrePage extends StatefulWidget {
 class _GenrePageState extends State<GenrePage> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
-
+  List allGenres = [];
   List genres = [];
 
   TextEditingController searchController = TextEditingController();
 
   void searchGenres(String key) {
     setState(() {
-      genres = widget.genres
+      genres = allGenres
           .where((e) =>
               e['name'].toString().toLowerCase().contains(key.toLowerCase()))
           .toList();
@@ -31,8 +30,11 @@ class _GenrePageState extends State<GenrePage> {
   void initState() {
     super.initState();
 
-    setState(() {
-      genres = widget.genres;
+    getGenres().then((result) {
+      setState(() {
+        allGenres = result;
+        genres = allGenres;
+      });
     });
   }
 

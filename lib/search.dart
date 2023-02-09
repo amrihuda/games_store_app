@@ -1,23 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:games_store_app/pages/searches/game_detail.dart';
+import 'package:games_store_app/helpers/xml_http.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key, required this.games}) : super(key: key);
+  const SearchPage({
+    Key? key,
+    required this.gameId,
+    required this.onGamePressed,
+  }) : super(key: key);
 
-  final List games;
+  final int gameId;
+  final Function(int) onGamePressed;
 
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
+  List allGames = [];
   List games = [];
 
   TextEditingController searchController = TextEditingController();
 
   void searchGames(String key) {
     setState(() {
-      games = widget.games
+      games = allGames
           .where((e) =>
               e['name'].toString().toLowerCase().contains(key.toLowerCase()))
           .toList();
@@ -28,8 +35,26 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
 
-    setState(() {
-      games = widget.games;
+    getGames().then((result) {
+      setState(() {
+        allGames = result;
+        games = allGames;
+      });
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.gameId != -1) {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GamePage(
+                gameId: widget.gameId,
+                onUnselectGame: () {
+                  widget.onGamePressed(-1);
+                },
+              ),
+            ));
+      }
     });
   }
 
@@ -79,11 +104,15 @@ class _SearchPageState extends State<SearchPage> {
                       style:
                           TextButton.styleFrom(foregroundColor: Colors.black),
                       onPressed: () {
+                        widget.onGamePressed(games[index]['id']);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => GamePage(
                                 gameId: games[index]['id'],
+                                onUnselectGame: () {
+                                  widget.onGamePressed(-1);
+                                },
                               ),
                             ));
                       },

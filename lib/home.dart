@@ -1,20 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:games_store_app/pages/home/game_genre.dart';
+import 'package:games_store_app/pages/home/genre.dart';
 import 'package:games_store_app/pages/searches/game_detail.dart';
 import 'package:intl/intl.dart';
+import 'package:games_store_app/helpers/xml_http.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({
     Key? key,
-    required this.genres,
-    required this.games,
+    required this.onMoreGamesPressed,
+    required this.onGamePressed,
   }) : super(key: key);
 
-  final List genres;
-  final List games;
+  final VoidCallback onMoreGamesPressed;
+  final Function(int) onGamePressed;
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   static const TextStyle sectionStyle =
       TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
+  var genres = [];
+  var games = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    getGenres().then((result) {
+      setState(() {
+        genres = result;
+      });
+    });
+    getGames().then((result) {
+      setState(() {
+        games = result;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +60,12 @@ class HomePage extends StatelessWidget {
                   ),
                   TextButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, '/genres');
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const GenrePage(),
+                          ),
+                        );
                       },
                       child: const Text("More"))
                 ],
@@ -86,9 +116,7 @@ class HomePage extends StatelessWidget {
                     style: sectionStyle,
                   ),
                   TextButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/games');
-                      },
+                      onPressed: () => widget.onMoreGamesPressed(),
                       child: const Text("More"))
                 ],
               ),
@@ -103,13 +131,7 @@ class HomePage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(15),
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => GamePage(
-                                    gameId: games[i]['id'],
-                                  ),
-                                ));
+                            widget.onGamePressed(games[i]['id']);
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size.zero,
