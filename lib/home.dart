@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:games_store_app/pages/home/game_genre.dart';
 import 'package:games_store_app/pages/home/genre.dart';
-import 'package:games_store_app/pages/searches/game_detail.dart';
 import 'package:intl/intl.dart';
 import 'package:games_store_app/helpers/xml_http.dart';
 
@@ -63,7 +62,11 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const GenrePage(),
+                            builder: (context) => GenrePage(
+                              onGamePressed: (gameId) {
+                                widget.onGamePressed(gameId);
+                              },
+                            ),
                           ),
                         );
                       },
@@ -92,7 +95,11 @@ class _HomePageState extends State<HomePage> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => GameGenrePage(
-                                          genreId: genres[i]['id']),
+                                        genreId: genres[i]['id'],
+                                        onGamePressed: (gameId) {
+                                          widget.onGamePressed(gameId);
+                                        },
+                                      ),
                                     ));
                               },
                               child: Text(
@@ -145,9 +152,8 @@ class _HomePageState extends State<HomePage> {
                                 child: Image.network(
                                   "http://localhost:3000/uploads/${games[i]['image']}",
                                   fit: BoxFit.cover,
-                                  errorBuilder: (BuildContext context,
-                                      Object exception,
-                                      StackTrace? stackTrace) {
+                                  errorBuilder:
+                                      (context, exception, stackTrace) {
                                     return Image.asset(
                                       'assets/images/game-default.jpg',
                                       fit: BoxFit.cover,

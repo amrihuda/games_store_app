@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:games_store_app/helpers/xml_http.dart';
+import 'package:games_store_app/pages/searches/game_detail.dart';
+import 'package:intl/intl.dart';
 
 class GameGenrePage extends StatefulWidget {
-  const GameGenrePage({Key? key, required this.genreId}) : super(key: key);
+  const GameGenrePage({
+    Key? key,
+    required this.genreId,
+    required this.onGamePressed,
+  }) : super(key: key);
 
   final int genreId;
+  final Function(int) onGamePressed;
 
   @override
   State<GameGenrePage> createState() => _GameGenrePageState();
@@ -97,25 +104,116 @@ class _GameGenrePageState extends State<GameGenrePage> {
                     )
                   : Container(),
               games.isNotEmpty
-                  ? ListView.separated(
+                  ? ListView.builder(
                       shrinkWrap: true,
                       itemCount: games.length,
-                      separatorBuilder: (context, index) => const Divider(),
-                      itemBuilder: (context, index) {
-                        return SizedBox(
-                          height: 50,
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                                foregroundColor: Colors.black),
-                            onPressed: () {
-                              // Navigator.pushNamed(context, "/profile");
-                            },
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(games[index]['name']),
-                              ],
+                      itemBuilder: (context, i) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: SizedBox(
+                            height: 80,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  padding:
+                                      const EdgeInsets.symmetric(horizontal: 8),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.zero)),
+                                ),
+                                onPressed: () {
+                                  widget.onGamePressed(games[i]['id']);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => GamePage(
+                                          gameId: games[i]['id'],
+                                          onUnselectGame: () {
+                                            widget.onGamePressed(-1);
+                                          },
+                                        ),
+                                      ));
+                                },
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 6),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              flex: 4,
+                                              child: Image.network(
+                                                "http://localhost:3000/uploads/${games[i]['image']}",
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context,
+                                                    exception, stackTrace) {
+                                                  return Image.asset(
+                                                    'assets/images/game-default.jpg',
+                                                    fit: BoxFit.cover,
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 8,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 6),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      games[i]['name'],
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          DateFormat('d MMM y').format(
+                                            DateTime.parse(
+                                              games[i]['gameProfile']
+                                                  ['release_date'],
+                                            ),
+                                          ),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        Text(
+                                          NumberFormat.currency(
+                                            locale: "id_ID",
+                                            symbol: "Rp ",
+                                          ).format(games[i]['price']),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         );

@@ -57,8 +57,7 @@ class _GamePageState extends State<GamePage> {
                         child: Image.network(
                           "http://localhost:3000/uploads/${game['image']}",
                           fit: BoxFit.cover,
-                          errorBuilder: (BuildContext context, Object exception,
-                              StackTrace? stackTrace) {
+                          errorBuilder: (context, exception, stackTrace) {
                             return Image.asset(
                               'assets/images/game-default.jpg',
                               fit: BoxFit.cover,

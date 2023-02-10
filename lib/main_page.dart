@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:games_store_app/menu.dart';
-import 'package:games_store_app/pages/home/genre.dart';
 import 'package:games_store_app/home.dart';
-import 'package:games_store_app/pages/menu/profile.dart';
 import 'package:games_store_app/search.dart';
+import 'package:games_store_app/cart.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -15,13 +14,12 @@ class MainPage extends StatefulWidget {
 
 GlobalKey<NavigatorState> _homeNavigatorKey = GlobalKey<NavigatorState>();
 GlobalKey<NavigatorState> _searchNavigatorKey = GlobalKey<NavigatorState>();
+GlobalKey<NavigatorState> _cartNavigatorKey = GlobalKey<NavigatorState>();
 GlobalKey<NavigatorState> _menuNavigatorKey = GlobalKey<NavigatorState>();
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   int _selectedGame = -1;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   void _onItemTapped(int index) {
     setState(() {
@@ -32,6 +30,7 @@ class _MainPageState extends State<MainPage> {
   final List<GlobalKey<NavigatorState>> _navigatorKeys = [
     _homeNavigatorKey,
     _searchNavigatorKey,
+    _cartNavigatorKey,
     _menuNavigatorKey,
   ];
 
@@ -85,9 +84,13 @@ class _MainPageState extends State<MainPage> {
           );
         },
       ),
-      const Text(
-        'Index 2: Cart',
-        style: optionStyle,
+      Navigator(
+        key: _cartNavigatorKey,
+        onGenerateRoute: (settings) {
+          return MaterialPageRoute(
+            builder: (context) => const CartPage(),
+          );
+        },
       ),
       Navigator(
         key: _menuNavigatorKey,

@@ -3,7 +3,12 @@ import 'package:games_store_app/pages/home/game_genre.dart';
 import 'package:games_store_app/helpers/xml_http.dart';
 
 class GenrePage extends StatefulWidget {
-  const GenrePage({super.key});
+  const GenrePage({
+    Key? key,
+    required this.onGamePressed,
+  }) : super(key: key);
+
+  final Function(int) onGamePressed;
 
   @override
   State<GenrePage> createState() => _GenrePageState();
@@ -92,6 +97,9 @@ class _GenrePageState extends State<GenrePage> {
                               MaterialPageRoute(
                                 builder: (context) => GameGenrePage(
                                   genreId: genres[i]['id'],
+                                  onGamePressed: (gameId) {
+                                    widget.onGamePressed(gameId);
+                                  },
                                 ),
                               ));
                         },
