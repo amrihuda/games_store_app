@@ -9,10 +9,12 @@ class HomePage extends StatefulWidget {
     Key? key,
     required this.onMoreGamesPressed,
     required this.onGamePressed,
+    required this.genreId,
   }) : super(key: key);
 
   final VoidCallback onMoreGamesPressed;
   final Function(int) onGamePressed;
+  final int genreId;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -20,7 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static const TextStyle sectionStyle =
-      TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
+      TextStyle(fontSize: 18, fontWeight: FontWeight.w500);
   var genres = [];
   var games = [];
 
@@ -33,10 +35,27 @@ class _HomePageState extends State<HomePage> {
         genres = result;
       });
     });
+
     getGames().then((result) {
       setState(() {
         games = result;
       });
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.genreId != -1) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GameGenrePage(
+              genreId: widget.genreId,
+              onGamePressed: (gameId) {
+                widget.onGamePressed(gameId);
+              },
+            ),
+          ),
+        );
+      }
     });
   }
 
@@ -92,15 +111,16 @@ class _HomePageState extends State<HomePage> {
                               ),
                               onPressed: () {
                                 Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => GameGenrePage(
-                                        genreId: genres[i]['id'],
-                                        onGamePressed: (gameId) {
-                                          widget.onGamePressed(gameId);
-                                        },
-                                      ),
-                                    ));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => GameGenrePage(
+                                      genreId: genres[i]['id'],
+                                      onGamePressed: (gameId) {
+                                        widget.onGamePressed(gameId);
+                                      },
+                                    ),
+                                  ),
+                                );
                               },
                               child: Text(
                                 genres[i]['name'],

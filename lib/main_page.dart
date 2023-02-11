@@ -20,6 +20,7 @@ GlobalKey<NavigatorState> _menuNavigatorKey = GlobalKey<NavigatorState>();
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   int _selectedGame = -1;
+  int _selectedGenre = -1;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -48,6 +49,10 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    int genreId = _selectedGenre;
+    setState(() {
+      _selectedGenre = -1;
+    });
     List<Widget> optionWidget = [
       Navigator(
         key: _homeNavigatorKey,
@@ -65,6 +70,7 @@ class _MainPageState extends State<MainPage> {
                   _selectedIndex = 1;
                 });
               },
+              genreId: genreId,
             ),
           );
         },
@@ -78,6 +84,12 @@ class _MainPageState extends State<MainPage> {
               onGamePressed: (gameId) {
                 setState(() {
                   _selectedGame = gameId;
+                });
+              },
+              onSelectedGenre: (genreId) {
+                setState(() {
+                  _selectedGenre = genreId;
+                  _selectedIndex = 0;
                 });
               },
             ),
@@ -96,7 +108,14 @@ class _MainPageState extends State<MainPage> {
         key: _menuNavigatorKey,
         onGenerateRoute: (settings) {
           return MaterialPageRoute(
-            builder: (context) => const MenuPage(),
+            builder: (context) => MenuPage(
+              onSelectedGenre: (genreId) {
+                setState(() {
+                  _selectedGenre = genreId;
+                  _selectedIndex = 0;
+                });
+              },
+            ),
           );
         },
       ),
@@ -127,6 +146,7 @@ class _MainPageState extends State<MainPage> {
               label: 'Menu',
             ),
           ],
+          iconSize: 26,
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
           showUnselectedLabels: false,

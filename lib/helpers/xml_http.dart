@@ -53,6 +53,13 @@ getGenres() async {
   return jsonDecode(response.body);
 }
 
+getGenre(id) async {
+  final response = await http.get(
+    Uri.parse('http://localhost:3000/api/genres/genre/$id'),
+  );
+  return jsonDecode(response.body);
+}
+
 getGames() async {
   final response = await http.get(
     Uri.parse('http://localhost:3000/api/games'),
@@ -74,4 +81,15 @@ addCart(gameId) {
         'user_token': jsonDecode(storage.getItem('user'))['user_token'],
       },
       body: jsonEncode(gameId));
+}
+
+getUserLibrary() async {
+  final response = await http.get(
+    Uri.parse('http://localhost:3000/api/libraries/library'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'user_token': jsonDecode(storage.getItem('user'))['user_token'],
+    },
+  );
+  return jsonDecode(response.body);
 }

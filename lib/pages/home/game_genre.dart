@@ -19,7 +19,7 @@ class GameGenrePage extends StatefulWidget {
 
 class _GameGenrePageState extends State<GameGenrePage> {
   static const TextStyle sectionStyle =
-      TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
+      TextStyle(fontSize: 18, fontWeight: FontWeight.w500);
 
   List allGames = [];
   List games = [];
@@ -40,11 +40,12 @@ class _GameGenrePageState extends State<GameGenrePage> {
   void initState() {
     super.initState();
 
-    getGenres().then((result) {
+    getGenre(widget.genreId).then((result) {
       setState(() {
-        genre = result.firstWhere((e) => e['id'] == widget.genreId);
+        genre = result;
       });
     });
+
     getGames().then((result) {
       setState(() {
         allGames = result
@@ -124,16 +125,16 @@ class _GameGenrePageState extends State<GameGenrePage> {
                                 ),
                                 onPressed: () {
                                   widget.onGamePressed(games[i]['id']);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => GamePage(
-                                          gameId: games[i]['id'],
-                                          onUnselectGame: () {
-                                            widget.onGamePressed(-1);
-                                          },
-                                        ),
-                                      ));
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //       builder: (context) => GamePage(
+                                  //         gameId: games[i]['id'],
+                                  //         onUnselectGame: () {
+                                  //           widget.onGamePressed(-1);
+                                  //         },
+                                  //       ),
+                                  //     ));
                                 },
                                 child: Column(
                                   children: [

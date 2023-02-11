@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:games_store_app/pages/auth/login.dart';
 import 'package:games_store_app/pages/menu/profile.dart';
+import 'package:games_store_app/pages/menu/library.dart';
+import 'package:games_store_app/pages/menu/transaction.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:games_store_app/helpers/xml_http.dart';
 
 class MenuPage extends StatefulWidget {
-  const MenuPage({super.key});
+  const MenuPage({Key? key, required this.onSelectedGenre}) : super(key: key);
+
+  final Function(int) onSelectedGenre;
 
   @override
   State<MenuPage> createState() => _MenuPageState();
@@ -78,10 +82,11 @@ class _MenuPageState extends State<MenuPage> {
                 style: TextButton.styleFrom(foregroundColor: Colors.black),
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfilePage(),
-                      ));
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfilePage(),
+                    ),
+                  );
                 },
                 child: Row(
                   children: [
@@ -115,7 +120,16 @@ class _MenuPageState extends State<MenuPage> {
               child: TextButton(
                 style: TextButton.styleFrom(foregroundColor: Colors.black),
                 onPressed: () {
-                  // To Library
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LibraryPage(
+                        onSelectedGenre: (genreId) {
+                          widget.onSelectedGenre(genreId);
+                        },
+                      ),
+                    ),
+                  );
                 },
                 child: Row(
                   children: [
@@ -131,6 +145,45 @@ class _MenuPageState extends State<MenuPage> {
                         children: const [
                           Text(
                             "Library",
+                            style: optionStyle,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Expanded(
+                      flex: 1,
+                      child: Center(child: Icon(Icons.navigate_next)),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 50,
+              child: TextButton(
+                style: TextButton.styleFrom(foregroundColor: Colors.black),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TransactionPage(),
+                    ),
+                  );
+                },
+                child: Row(
+                  children: [
+                    const Expanded(
+                      flex: 2,
+                      child: Center(child: Icon(Icons.receipt)),
+                    ),
+                    Expanded(
+                      flex: 9,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "Transactions",
                             style: optionStyle,
                           ),
                         ],

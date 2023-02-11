@@ -8,10 +8,12 @@ class SearchPage extends StatefulWidget {
     Key? key,
     required this.gameId,
     required this.onGamePressed,
+    required this.onSelectedGenre,
   }) : super(key: key);
 
   final int gameId;
   final Function(int) onGamePressed;
+  final Function(int) onSelectedGenre;
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -20,6 +22,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   List allGames = [];
   List games = [];
+  List inLibrary = [];
 
   TextEditingController searchController = TextEditingController();
 
@@ -41,6 +44,11 @@ class _SearchPageState extends State<SearchPage> {
         allGames = result;
         games = allGames;
       });
+      getUserLibrary().then((result) {
+        setState(() {
+          inLibrary = result;
+        });
+      });
     });
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -52,6 +60,9 @@ class _SearchPageState extends State<SearchPage> {
                 gameId: widget.gameId,
                 onUnselectGame: () {
                   widget.onGamePressed(-1);
+                },
+                onSelectedGenre: (genreId) {
+                  widget.onSelectedGenre(genreId);
                 },
               ),
             ));
@@ -121,6 +132,9 @@ class _SearchPageState extends State<SearchPage> {
                                     onUnselectGame: () {
                                       widget.onGamePressed(-1);
                                     },
+                                    onSelectedGenre: (genreId) {
+                                      widget.onSelectedGenre(genreId);
+                                    },
                                   ),
                                 ));
                           },
@@ -186,10 +200,15 @@ class _SearchPageState extends State<SearchPage> {
                                     ),
                                   ),
                                   Text(
-                                    NumberFormat.currency(
-                                      locale: "id_ID",
-                                      symbol: "Rp ",
-                                    ).format(games[i]['price']),
+                                    inLibrary
+                                            .where((e) =>
+                                                e['gameId'] == games[i]['id'])
+                                            .isEmpty
+                                        ? NumberFormat.currency(
+                                            locale: "id_ID",
+                                            symbol: "Rp ",
+                                          ).format(games[i]['price'])
+                                        : "Owned",
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                     ),
