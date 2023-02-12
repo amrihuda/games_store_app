@@ -9,11 +9,13 @@ class GamePage extends StatefulWidget {
     required this.gameId,
     required this.onUnselectGame,
     required this.onSelectedGenre,
+    required this.onGotoCart,
   }) : super(key: key);
 
   final int gameId;
   final VoidCallback onUnselectGame;
   final Function(int) onSelectedGenre;
+  final VoidCallback onGotoCart;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -25,6 +27,7 @@ class _GamePageState extends State<GamePage> {
   );
   Map game = {};
   int inLibrary = 0;
+  int inCart = 0;
 
   Future<bool> _unselectGame() async {
     widget.onUnselectGame();
@@ -47,6 +50,17 @@ class _GamePageState extends State<GamePage> {
         } else {
           setState(() {
             inLibrary = 2;
+          });
+        }
+      });
+      getCart().then((result) {
+        if (result.where((e) => e['gameId'] == game['id']).isEmpty) {
+          setState(() {
+            inCart = 1;
+          });
+        } else {
+          setState(() {
+            inCart = 2;
           });
         }
       });
@@ -210,86 +224,131 @@ class _GamePageState extends State<GamePage> {
                                         )),
                                     Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          shape: const StadiumBorder(),
-                                          minimumSize:
-                                              const Size.fromHeight(50),
-                                        ),
-                                        onPressed: () async {
-                                          try {
-                                            var response =
-                                                await addCart(game['id']);
-                                            if (response.statusCode == 200) {
-                                              if (!mounted) return;
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        AlertDialog(
-                                                  title: const Text(
-                                                      "Game was added to cart successfully."),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: const Text('OK'),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            } else {
-                                              if (!mounted) return;
-                                              showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        AlertDialog(
-                                                  title: Text(
-                                                      jsonDecode(response.body)[
-                                                          'message']),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child: const Text('OK'),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            }
-                                          } catch (e) {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  AlertDialog(
-                                                title: Text(e.toString()),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                    },
-                                                    child: const Text('OK'),
+                                      child: inCart != 0
+                                          ? inCart == 1
+                                              ? ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    shape:
+                                                        const StadiumBorder(),
+                                                    minimumSize:
+                                                        const Size.fromHeight(
+                                                            50),
                                                   ),
-                                                ],
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: const Text(
-                                          'Add to Cart',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
+                                                  onPressed: () async {
+                                                    try {
+                                                      var response =
+                                                          await addCart(
+                                                              game['id']);
+                                                      if (response.statusCode ==
+                                                          201) {
+                                                        setState(() {
+                                                          inCart = 2;
+                                                        });
+                                                        if (!mounted) return;
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              AlertDialog(
+                                                            title: const Text(
+                                                                "Game was added to cart successfully."),
+                                                            actions: [
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                        'OK'),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        if (!mounted) return;
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              AlertDialog(
+                                                            title: Text(jsonDecode(
+                                                                    response
+                                                                        .body)[
+                                                                'message']),
+                                                            actions: [
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                        'OK'),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      }
+                                                    } catch (e) {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                                context) =>
+                                                            AlertDialog(
+                                                          title: Text(
+                                                              e.toString()),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: const Text(
+                                                                  'OK'),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  child: const Text(
+                                                    'Add to Cart',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                )
+                                              : ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    shape:
+                                                        const StadiumBorder(),
+                                                    minimumSize:
+                                                        const Size.fromHeight(
+                                                            50),
+                                                  ),
+                                                  onPressed: () {
+                                                    widget.onGotoCart();
+                                                  },
+                                                  child: const Text(
+                                                    'Go to Cart',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                )
+                                          : Container(),
                                     ),
                                   ],
                                 )

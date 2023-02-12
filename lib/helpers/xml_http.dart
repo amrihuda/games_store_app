@@ -75,12 +75,33 @@ getGame(id) async {
 }
 
 addCart(gameId) {
-  return http.post(Uri.parse('http://localhost:3000/api/carts'),
+  return http.post(Uri.parse('http://localhost:3000/api/carts/cart'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'user_token': jsonDecode(storage.getItem('user'))['user_token'],
       },
-      body: jsonEncode(gameId));
+      body: jsonEncode({'gameId': gameId}));
+}
+
+getCart() async {
+  final response = await http.get(
+    Uri.parse('http://localhost:3000/api/carts/cart'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'user_token': jsonDecode(storage.getItem('user'))['user_token'],
+    },
+  );
+  return jsonDecode(response.body);
+}
+
+deleteAllCart() {
+  return http.delete(
+    Uri.parse('http://localhost:3000/api/carts/cart/delete-all'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'user_token': jsonDecode(storage.getItem('user'))['user_token'],
+    },
+  );
 }
 
 getUserLibrary() async {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:games_store_app/pages/searches/game_detail.dart';
 import 'package:games_store_app/helpers/xml_http.dart';
-import 'package:intl/intl.dart';
 
 class LibraryPage extends StatefulWidget {
   const LibraryPage({
@@ -116,6 +115,7 @@ class _LibraryPageState extends State<LibraryPage> {
                                         onSelectedGenre: (genreId) {
                                           widget.onSelectedGenre(genreId);
                                         },
+                                        onGotoCart: () {},
                                       ),
                                     ));
                               },
@@ -123,8 +123,7 @@ class _LibraryPageState extends State<LibraryPage> {
                                 children: [
                                   Expanded(
                                     child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 6),
+                                      padding: const EdgeInsets.only(left: 6),
                                       child: Row(
                                         children: [
                                           Expanded(
@@ -147,50 +146,23 @@ class _LibraryPageState extends State<LibraryPage> {
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       horizontal: 6),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    games[i]['name'],
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      fontSize: 16,
-                                                    ),
+                                              child: Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  games[i]['name'],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16,
                                                   ),
-                                                ],
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        DateFormat('d MMM y').format(
-                                          DateTime.parse(
-                                            games[i]['gameProfile']
-                                                ['release_date'],
-                                          ),
-                                        ),
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      const Text(
-                                        "Owned",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
                                   ),
                                 ],
                               ),

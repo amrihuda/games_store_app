@@ -92,6 +92,11 @@ class _MainPageState extends State<MainPage> {
                   _selectedIndex = 0;
                 });
               },
+              onGotoCart: () {
+                setState(() {
+                  _selectedIndex = 2;
+                });
+              },
             ),
           );
         },

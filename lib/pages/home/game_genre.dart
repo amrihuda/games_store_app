@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:games_store_app/helpers/xml_http.dart';
-import 'package:games_store_app/pages/searches/game_detail.dart';
 import 'package:intl/intl.dart';
 
 class GameGenrePage extends StatefulWidget {
@@ -125,16 +124,6 @@ class _GameGenrePageState extends State<GameGenrePage> {
                                 ),
                                 onPressed: () {
                                   widget.onGamePressed(games[i]['id']);
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //       builder: (context) => GamePage(
-                                  //         gameId: games[i]['id'],
-                                  //         onUnselectGame: () {
-                                  //           widget.onGamePressed(-1);
-                                  //         },
-                                  //       ),
-                                  //     ));
                                 },
                                 child: Column(
                                   children: [
