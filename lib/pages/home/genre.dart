@@ -76,47 +76,40 @@ class _GenrePageState extends State<GenrePage> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: genres.isNotEmpty
-            ? Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: genres.length,
-                  separatorBuilder: (context, i) => const Divider(),
-                  itemBuilder: (context, i) {
-                    return SizedBox(
-                      height: 40,
-                      child: TextButton(
-                        style:
-                            TextButton.styleFrom(foregroundColor: Colors.black),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => GameGenrePage(
-                                  genreId: genres[i]['id'],
-                                  onGamePressed: (gameId) {
-                                    widget.onGamePressed(gameId);
-                                  },
-                                ),
-                              ));
-                        },
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            genres[i]['name'],
-                            style: optionStyle,
-                          ),
-                        ),
+      body: genres.isNotEmpty
+          ? ListView.separated(
+              padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
+              itemCount: genres.length,
+              separatorBuilder: (context, i) => const Divider(),
+              itemBuilder: (context, i) {
+                return SizedBox(
+                  height: 40,
+                  child: TextButton(
+                    style: TextButton.styleFrom(foregroundColor: Colors.black),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GameGenrePage(
+                              genreId: genres[i]['id'],
+                              onGamePressed: (gameId) {
+                                widget.onGamePressed(gameId);
+                              },
+                            ),
+                          ));
+                    },
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        genres[i]['name'],
+                        style: optionStyle,
                       ),
-                    );
-                  },
-                ),
-              )
-            : Container(),
-      ),
+                    ),
+                  ),
+                );
+              },
+            )
+          : Container(),
     );
   }
 }

@@ -182,6 +182,8 @@ class _GamePageState extends State<GamePage> {
                                             child: OutlinedButton(
                                               style: OutlinedButton.styleFrom(
                                                 shape: const StadiumBorder(),
+                                                side: const BorderSide(
+                                                    color: Colors.blue),
                                               ),
                                               onPressed: () {
                                                 widget.onSelectedGenre(

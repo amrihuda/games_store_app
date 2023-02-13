@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:localstorage/localstorage.dart';
@@ -102,6 +103,27 @@ deleteAllCart() {
       'user_token': jsonDecode(storage.getItem('user'))['user_token'],
     },
   );
+}
+
+addTransaction(form) {
+  return http.post(
+      Uri.parse('http://localhost:3000/api/transactions/transaction'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'user_token': jsonDecode(storage.getItem('user'))['user_token'],
+      },
+      body: jsonEncode(form));
+}
+
+getTransactions() async {
+  final response = await http.get(
+    Uri.parse('http://localhost:3000/api/transactions/transaction'),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      'user_token': jsonDecode(storage.getItem('user'))['user_token'],
+    },
+  );
+  return jsonDecode(response.body);
 }
 
 getUserLibrary() async {

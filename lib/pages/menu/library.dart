@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:games_store_app/pages/searches/game_detail.dart';
+import 'package:games_store_app/pages/search/game_detail.dart';
 import 'package:games_store_app/helpers/xml_http.dart';
 
 class LibraryPage extends StatefulWidget {
@@ -123,7 +123,8 @@ class _LibraryPageState extends State<LibraryPage> {
                                 children: [
                                   Expanded(
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left: 6),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 6),
                                       child: Row(
                                         children: [
                                           Expanded(
@@ -143,9 +144,8 @@ class _LibraryPageState extends State<LibraryPage> {
                                           Expanded(
                                             flex: 8,
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 6),
+                                              padding: const EdgeInsets.only(
+                                                  left: 6),
                                               child: Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: Text(
