@@ -9,12 +9,14 @@ class GamePage extends StatefulWidget {
     required this.gameId,
     required this.onUnselectGame,
     required this.onSelectedGenre,
+    required this.onAddedtoCart,
     required this.onGotoCart,
   }) : super(key: key);
 
   final int gameId;
   final VoidCallback onUnselectGame;
   final Function(int) onSelectedGenre;
+  final Function(String) onAddedtoCart;
   final VoidCallback onGotoCart;
 
   @override
@@ -247,75 +249,17 @@ class _GamePageState extends State<GamePage> {
                                                         setState(() {
                                                           inCart = 2;
                                                         });
-                                                        if (!mounted) return;
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              AlertDialog(
-                                                            title: const Text(
-                                                                "Game was added to cart successfully."),
-                                                            actions: [
-                                                              TextButton(
-                                                                onPressed: () {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                },
-                                                                child:
-                                                                    const Text(
-                                                                        'OK'),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
+                                                        widget.onAddedtoCart(
+                                                            "Game was added to cart successfully.");
                                                       } else {
-                                                        if (!mounted) return;
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (BuildContext
-                                                                  context) =>
-                                                              AlertDialog(
-                                                            title: Text(jsonDecode(
-                                                                    response
-                                                                        .body)[
-                                                                'message']),
-                                                            actions: [
-                                                              TextButton(
-                                                                onPressed: () {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                },
-                                                                child:
-                                                                    const Text(
-                                                                        'OK'),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
+                                                        widget.onAddedtoCart(
+                                                            jsonDecode(response
+                                                                    .body)[
+                                                                'message']);
                                                       }
                                                     } catch (e) {
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext
-                                                                context) =>
-                                                            AlertDialog(
-                                                          title: Text(
-                                                              e.toString()),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                              },
-                                                              child: const Text(
-                                                                  'OK'),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      );
+                                                      widget.onAddedtoCart(
+                                                          e.toString());
                                                     }
                                                   },
                                                   child: const Text(

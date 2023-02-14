@@ -4,7 +4,10 @@ import '../../helpers/xml_http.dart';
 import 'dart:convert';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  const RegisterPage({Key? key, required this.onRegisterSuccess})
+      : super(key: key);
+
+  final VoidCallback onRegisterSuccess;
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -123,7 +126,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     onChanged: (value) {
                       setState(() {
-                        form['password'] = value;
+                        form['password'] = value.toString();
                       });
                     },
                   ),
@@ -149,21 +152,8 @@ class _RegisterPageState extends State<RegisterPage> {
                         var response = await userRegister(form);
                         if (response.statusCode == 201) {
                           if (!mounted) return;
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: const Text(
-                                  "Your account was created successfully."),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            ),
-                          );
+                          Navigator.pop(context);
+                          widget.onRegisterSuccess();
                         } else {
                           setState(() {
                             _errorMessage =

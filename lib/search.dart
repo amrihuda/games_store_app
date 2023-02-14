@@ -9,12 +9,14 @@ class SearchPage extends StatefulWidget {
     required this.gameId,
     required this.onGamePressed,
     required this.onSelectedGenre,
+    required this.onAddedtoCart,
     required this.onGotoCart,
   }) : super(key: key);
 
   final int gameId;
   final Function(int) onGamePressed;
   final Function(int) onSelectedGenre;
+  final Function(String) onAddedtoCart;
   final VoidCallback onGotoCart;
 
   @override
@@ -65,6 +67,9 @@ class _SearchPageState extends State<SearchPage> {
                 },
                 onSelectedGenre: (genreId) {
                   widget.onSelectedGenre(genreId);
+                },
+                onAddedtoCart: (text) {
+                  widget.onAddedtoCart(text);
                 },
                 onGotoCart: () {
                   widget.onGotoCart();
@@ -137,6 +142,9 @@ class _SearchPageState extends State<SearchPage> {
                                   },
                                   onSelectedGenre: (genreId) {
                                     widget.onSelectedGenre(genreId);
+                                  },
+                                  onAddedtoCart: (text) {
+                                    widget.onAddedtoCart(text);
                                   },
                                   onGotoCart: () {
                                     widget.onGotoCart();

@@ -200,23 +200,8 @@ class _PaymentPageState extends State<PaymentPage> {
                     var response = await addTransaction(form);
                     if (response.statusCode == 201) {
                       if (!mounted) return;
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text("Payment Success!"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      ).then((value) {
-                        widget.onPaymentSuccess();
-                        Navigator.pop(context);
-                      });
+                      Navigator.pop(context);
+                      widget.onPaymentSuccess();
                     } else {
                       if (!mounted) return;
                       showDialog(

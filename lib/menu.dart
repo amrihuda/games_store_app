@@ -7,9 +7,14 @@ import 'package:localstorage/localstorage.dart';
 import 'package:games_store_app/helpers/xml_http.dart';
 
 class MenuPage extends StatefulWidget {
-  const MenuPage({Key? key, required this.onSelectedGenre}) : super(key: key);
+  const MenuPage({
+    Key? key,
+    required this.onSelectedGenre,
+    required this.onUpdateSuccess,
+  }) : super(key: key);
 
   final Function(int) onSelectedGenre;
+  final Function(String) onUpdateSuccess;
 
   @override
   State<MenuPage> createState() => _MenuPageState();
@@ -84,7 +89,11 @@ class _MenuPageState extends State<MenuPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const ProfilePage(),
+                      builder: (context) => ProfilePage(
+                        onUpdateSuccess: (text) {
+                          widget.onUpdateSuccess(text);
+                        },
+                      ),
                     ),
                   );
                 },

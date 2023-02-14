@@ -94,7 +94,7 @@ class _LibraryPageState extends State<LibraryPage> {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: SizedBox(
-                          height: 80,
+                          height: 70,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: ElevatedButton(
@@ -115,6 +115,7 @@ class _LibraryPageState extends State<LibraryPage> {
                                         onSelectedGenre: (genreId) {
                                           widget.onSelectedGenre(genreId);
                                         },
+                                        onAddedtoCart: (text) {},
                                         onGotoCart: () {},
                                       ),
                                     ));

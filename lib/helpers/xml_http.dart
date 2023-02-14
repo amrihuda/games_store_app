@@ -40,8 +40,8 @@ userUpdate(form) async {
     })
     ..fields['username'] = form['username']
     ..fields['email'] = form['email']
-    ..fields['password'] = form['password']
-    ..fields['age'] = form['age'];
+    ..fields['password'] = form['password'].toString()
+    ..fields['age'] = form['age'].toString();
   var streamedResponse = await request.send();
   var response = await http.Response.fromStream(streamedResponse);
   return response;

@@ -4,6 +4,7 @@ import 'package:games_store_app/menu.dart';
 import 'package:games_store_app/home.dart';
 import 'package:games_store_app/search.dart';
 import 'package:games_store_app/cart.dart';
+import 'package:games_store_app/helpers/xml_http.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -21,6 +22,28 @@ class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
   int _selectedGame = -1;
   int _selectedGenre = -1;
+
+  int _countCart = 0;
+
+  bool _alertVisible = false;
+  var _textAlert = '';
+
+  void showAlert(text) {
+    setState(() {
+      _alertVisible = false;
+      _textAlert = text;
+    });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      setState(() {
+        _alertVisible = true;
+      });
+      Future.delayed(const Duration(seconds: 3), () {
+        setState(() {
+          _alertVisible = false;
+        });
+      });
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -45,6 +68,17 @@ class _MainPageState extends State<MainPage> {
       SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop');
       return false;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getCart().then((result) {
+      setState(() {
+        _countCart = result.length;
+      });
+    });
   }
 
   @override
@@ -92,6 +126,12 @@ class _MainPageState extends State<MainPage> {
                   _selectedIndex = 0;
                 });
               },
+              onAddedtoCart: (text) {
+                setState(() {
+                  _countCart++;
+                });
+                showAlert(text);
+              },
               onGotoCart: () {
                 setState(() {
                   _selectedIndex = 2;
@@ -105,7 +145,14 @@ class _MainPageState extends State<MainPage> {
         key: _cartNavigatorKey,
         onGenerateRoute: (settings) {
           return MaterialPageRoute(
-            builder: (context) => const CartPage(),
+            builder: (context) => CartPage(
+              onClearCart: (text) {
+                setState(() {
+                  _countCart = 0;
+                });
+                showAlert(text);
+              },
+            ),
           );
         },
       ),
@@ -120,6 +167,9 @@ class _MainPageState extends State<MainPage> {
                   _selectedIndex = 0;
                 });
               },
+              onUpdateSuccess: (text) {
+                showAlert(text);
+              },
             ),
           );
         },
@@ -129,24 +179,91 @@ class _MainPageState extends State<MainPage> {
       onWillPop: _systemBackButtonPressed,
       child: Scaffold(
         body: SafeArea(
-          top: false,
-          child: optionWidget.elementAt(_selectedIndex),
-        ),
+            top: false,
+            child: Stack(
+              children: [
+                optionWidget.elementAt(_selectedIndex),
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  child: Visibility(
+                    key: ValueKey<bool>(_alertVisible),
+                    visible: _alertVisible,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(top: 55, left: 20, right: 20),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.all(20),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              side: const BorderSide(color: Colors.blue),
+                              foregroundColor: Colors.black,
+                              backgroundColor: Colors.white),
+                          onPressed: () {
+                            setState(() {
+                              _alertVisible = false;
+                            });
+                          },
+                          child: Text(
+                            _textAlert,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )),
         bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
+          items: <BottomNavigationBarItem>[
+            const BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.search),
               label: 'Search',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart),
+              icon: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(Icons.shopping_cart),
+                  Positioned(
+                    top: -8,
+                    right: -8,
+                    child: _countCart > 0
+                        ? Container(
+                            padding: const EdgeInsets.all(1),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 20,
+                              minHeight: 20,
+                            ),
+                            child: Center(
+                              child: Text(
+                                '$_countCart',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          )
+                        : Container(),
+                  )
+                ],
+              ),
               label: 'Cart',
             ),
-            BottomNavigationBarItem(
+            const BottomNavigationBarItem(
               icon: Icon(Icons.menu),
               label: 'Menu',
             ),

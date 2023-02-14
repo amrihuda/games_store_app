@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:games_store_app/helpers/xml_http.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({Key? key, required this.onUpdateSuccess})
+      : super(key: key);
+
+  final Function(String) onUpdateSuccess;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -131,7 +134,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     child: TextFormField(
-                      initialValue: form['age'].toString(),
+                      initialValue: form['age'].toString() == '0'
+                          ? ''
+                          : form['age'].toString(),
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
@@ -145,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           hintText: 'Age'),
                       onChanged: (value) {
                         setState(() {
-                          form['age'] = value;
+                          form['age'] = value == '' ? 0 : value;
                         });
                       },
                     ),
@@ -169,22 +174,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         try {
                           var response = await userUpdate(form);
                           if (response.statusCode == 200) {
-                            if (!mounted) return;
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: const Text(
-                                    "Your account was updated successfully."),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              ),
-                            );
+                            widget.onUpdateSuccess(
+                                "Your account was updated successfully.");
                           } else {
                             setState(() {
                               _errorMessage =
